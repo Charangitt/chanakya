@@ -1,0 +1,120 @@
+// PathfindingGrid.jsx
+import React, { useState, useEffect } from 'react';
+import './pathcss';
+
+const gridSize = { rows: 16, cols: 22 };
+
+const PathFinding = () => {
+    const [gridData, setGridData] = useState(Array.from({ length: gridSize.rows }, () => Array(gridSize.cols).fill(0)));
+    const [mode, setMode] = useState("");
+    const [selectedSoldier, setSelectedSoldier] = useState(null);
+    const [selectedSoldiers, setSelectedSoldiers] = useState([]);
+
+    useEffect(() => {
+        createObstacles();
+    }, []);
+
+    const createObstacles = () => {
+        const updatedGridData = [...gridData];
+        const obstaclePositions = [
+            { row: 3, col: 4 }, { row: 8, col: 9 }, { row: 12, col: 18 },
+            { row: 11, col: 2 }, { row: 10, col: 20 }, { row: 7, col: 13 },
+            { row: 2, col: 16 }, { row: 4, col: 6 }, { row: 13, col: 5 }, { row: 9, col: 18 }
+        ];
+
+        obstaclePositions.forEach(({ row, col }) => {
+            updatedGridData[row][col] = 2;
+        });
+        setGridData(updatedGridData);
+    };
+
+    const handleCellClick = (row, col) => {
+        const updatedGridData = [...gridData];
+        const cellValue = gridData[row][col];
+
+        if (mode === "placeSoldier" && cellValue === 0) {
+            updatedGridData[row][col] = 1;
+        } else if (mode === "addEnemy") {
+            updatedGridData[row][col] = -3;
+            applyDangerZone(row, col, updatedGridData);
+        } else if (mode === "selectSoldier" && cellValue === 1) {
+            const selected = { row, col };
+            setSelectedSoldiers([...selectedSoldiers, selected]);
+        } else if (mode === "submit" && cellValue === 0) {
+            selectedSoldiers.forEach(soldier => computePath(soldier, { row, col }));
+            setSelectedSoldiers([]);
+            setMode("");
+        }
+
+        setGridData(updatedGridData);
+    };
+
+    const applyDangerZone = (row, col, grid) => {
+        const dangerZones = [...getNeighbors(row, col), ...getDiagonalNeighbors(row, col)];
+        dangerZones.forEach(({ row, col, value }) => {
+            if (value !== -3) {
+                grid[row][col] += value;
+            }
+        });
+    };
+
+    const computePath = (start, end) => {
+        const path = aStar(start, end, gridData);
+        path.forEach(({ row, col }) => {
+            const updatedGridData = [...gridData];
+            updatedGridData[row][col] = 'path';
+            setGridData(updatedGridData);
+        });
+    };
+
+    const aStar = (start, end, gridData) => {
+        // Your A* implementation goes here
+        return [];
+    };
+
+    const getNeighbors = (row, col) => {
+        const neighbors = [];
+        if (row > 0) neighbors.push({ row: row - 1, col, value: -2 });
+        if (row < gridSize.rows - 1) neighbors.push({ row: row + 1, col, value: -2 });
+        if (col > 0) neighbors.push({ row, col: col - 1, value: -2 });
+        if (col < gridSize.cols - 1) neighbors.push({ row, col: col + 1, value: -2 });
+        return neighbors;
+    };
+
+    const getDiagonalNeighbors = (row, col) => {
+        const neighbors = [];
+        if (row > 0 && col > 0) neighbors.push({ row: row - 1, col: col - 1, value: -1 });
+        if (row < gridSize.rows - 1 && col < gridSize.cols - 1) neighbors.push({ row: row + 1, col: col + 1, value: -1 });
+        if (row > 0 && col < gridSize.cols - 1) neighbors.push({ row: row - 1, col: col + 1, value: -1 });
+        if (row < gridSize.rows - 1 && col > 0) neighbors.push({ row: row + 1, col: col - 1, value: -1 });
+        return neighbors;
+    };
+
+    const handleModeChange = (newMode) => setMode(newMode);
+
+    return (
+        <div className="pathfinding-grid">
+            <h1>Pathfinding Simulation</h1>
+            <div className="options">
+                <button onClick={() => handleModeChange("placeSoldier")}>Place Soldiers</button>
+                <button onClick={() => handleModeChange("addEnemy")}>Add Enemies</button>
+                <button onClick={() => handleModeChange("selectSoldier")}>Select Soldier</button>
+                <button onClick={() => setGridData(Array.from({ length: gridSize.rows }, () => Array(gridSize.cols).fill(0)))}>Reset</button>
+                <button onClick={() => handleModeChange("submit")}>Submit</button>
+            </div>
+            <div className="grid">
+                {gridData.map((row, rowIndex) =>
+                    row.map((cell, colIndex) => (
+                        <div
+                            key={`${rowIndex}-${colIndex}`}
+                            className={`grid-cell ${cell === 1 ? 'soldier' : ''} ${cell === -3 ? 'enemy' : ''} ${cell === -2 ? 'danger' : ''} ${cell === 2 ? 'hide' : ''} ${cell === 'path' ? 'path' : ''}`}
+                            onClick={() => handleCellClick(rowIndex, colIndex)}
+                        />
+                    ))
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default Pathfinding;

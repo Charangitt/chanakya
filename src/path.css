@@ -1,0 +1,81 @@
+.gri {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+#grid {
+    display: grid;
+    grid-template-columns: repeat(80,10px);
+    grid-template-rows: repeat(40, 10px);
+    margin-bottom: 10px;
+    background-image: url('/public/map.jpeg'); 
+    /* border: 1px solid black; *
+    /*  */
+}
+.dropeffect{
+    display: flex;
+    opacity: 0;
+    animation: 5s 0.2;
+}
+.grid-cell {
+    width: 10px;
+    height: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    /* border: 1px solid white; */
+}
+
+.enemy {
+    background-image: url('/public/pak.png') !important;
+    height: 15px; /* Set your desired height */
+    width: 15px; /* Set your desired width */
+    background-size: contain; /* or cover, depending on your needs */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-position: center; /* Centers the image */
+    box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.8); /* Red glow effect */
+  border-radius: 50%; /* Optional: for a round aura */
+  }
+.soldier {
+    background-image: url('/public/sd.png');
+    height: 15px; /* Set your desired height */
+    width: 15px; /* Set your desired width */
+    background-size: contain; /* or cover, depending on your needs */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-position: center; /* Centers the image */
+    box-shadow: 0 0 10px 5px rgba(0, 255, 0, 0.3); /* Red glow effect */
+  border-radius: 50%; /* Optional: for a round aura */
+  }
+.path { background-color: rgb(158, 171, 97,0.4); }
+.hide {
+    background-image: url('/public/shd.png') !important;
+    height: 15px; /* Set your desired height */
+    width: 15px; /* Set your desired width */
+    background-size: contain; /* or cover, depending on your needs */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-position: center; /* Centers the image */
+    box-shadow: 0 0 10px 5px rgba(15, 15, 15, 0.4); /* Red glow effect */
+  border-radius: 50%; /* Optional: for a round aura */
+  }
+  .selected-soldier{
+    box-shadow: 0 0 10px 5px rgba(0, 255, 0, 0.6); /* Red glow effect */
+
+  }
+.options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.para{
+    display: none;
+}
